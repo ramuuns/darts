@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Šautru turnīrs</title>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.0/css/bootstrap-responsive.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="darts.css">
+</head>
+<body>
+	<div class="row">
+		<div class="span2"></div>
+		<div id="stage-1" class="span8">
+		
+			<form class="form-horizontal" id="members">
+				<fieldset>
+					<legend>Ievadiet dalībniekus</legend>
+					<div class="control-group">
+						<label class="control-label">Max zaudējumu skaits:&nbsp;</label>
+						<div class="control">
+							<input type="number" id="max_losses" value="5">
+						</div>
+					</div>
+					
+					<div id="member-cont">
+						<div class="control-group">
+							<label class="control-label">Vārds:&nbsp;</label>
+							<div class="control"><input type="text" data-id="player-0">
+							<span class="help-inline"><button class="close">&times;</button></span>
+							</div>
+						</div>
+					</div>
+					<div class="control">
+						<button class="btn" id="add-member">Pievienot vēl</button>
+						<button class="btn btn-primary" id="start">Sākt</button>
+					</div>
+				</fieldset>
+				
+				<div id="player-template" style="display:none;">
+					<div class="control-group">
+						<label class="control-label">Vārds:&nbsp;</label>
+						<div class="control">
+							<input type="text" data-id="%data-id%">
+							<span class="help-inline"><button class="close">&times;</button></span>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	
+		<div id="stage-2" class="span8">
+			<table id="losses-table" class="table table-striped">
+				<tbody>
+				</tbody>
+			</table>
+
+			<div id="rounds">
+			</div>
+
+			<button class="btn btn-default" id="create-round">Izlozēt nākamo kārtu</button>
+
+			<div id="round-template" style="display:none;">
+				<div class="row round">
+					%games%
+					%skips%
+				</div>
+			</div>
+
+			<div id="game-template" style="display:none;">
+				<div class="span4 game">
+					<div class="row pair first">
+						<span class="p1" data-player="%player-1id%">%player-1name%</span> &amp;
+						<span class="p2" data-player="%player-2id%">%player-2name%</span>
+					</div>
+					<div class="row">vs</div>
+					<div class="row pair second">
+						<span class="p3" data-player="%player-3id%">%player-3name%</span> &amp;
+						<span class="p4" data-player="%player-4id%">%player-4name%</span>
+					</div>
+				</div>
+			</div>
+
+			<div id="skip-template" style="display:none;">
+				<div class="span4 halava">
+				</div>
+			</div>
+		</div>
+
+		<div class="span2"></div>
+	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="darts.js"></script>
+</body>
+</html>

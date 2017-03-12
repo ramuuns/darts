@@ -1,0 +1,32 @@
+#losses-table td span {
+			display:none;
+		}
+
+		#losses-table td.loss span {
+			display: inline;
+		}
+
+		.round {
+			margin-bottom:1em;
+			margin-top:0.3em;
+			padding-bottom:.5em;
+			border-bottom:1px solid hsl(0,0%,80%);
+		}
+
+		.game {
+			box-sizing: border-box;
+			border:1px solid hsl(0,0%,90%);
+			padding:0 0 0 25px;
+		}
+		.halava {
+			opacity: 0.5;
+			box-sizing: border-box;
+                        border:1px solid hsl(0,0%,90%);
+                        padding:0 0 0 25px;
+		}
+		body {
+			margin-bottom:5em;
+		}
+		.pair {
+			cursor:pointer;
+		}
