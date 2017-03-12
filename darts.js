@@ -9,7 +9,6 @@ $(function(){
 		var remaining_players_cnt = 1;
 		var max_skips = 0;
 		var remaining_players = [];
-        var max_games;
         var games_per_pair = new Map();
 
 		var players = {
@@ -131,23 +130,79 @@ $(function(){
 				}
 			}
 
+            //atliksušie pēc haļavām
             roundPairs = roundPairs.filter((player) => {
                 return !roundSkips.has(player);
             });
 			
-			var randomSorted = roundPairs.sort(function(a,b){ return Math.random() - Math.random(); });
+            //visi iespējamie pāri no šiem atlikušajiem spēlētājiem
+            var allPairs = createPairs(roundPairs);
 
-			var pairs = [];
+            //atrodam mazāko spēļu skaitu, ko kāds pāris ir spēlējis kopā
+            var min_games = allPairs.reduce((p,c) => {
+                var k = c[0].id + c[1].id;
+                return Math.min(p, games_per_pair.has(k) ? games_per_pair.get(k) : 0);
+            }, +Infinity);
 
-			for ( i = 0; i < randomSorted.length; i+=2 ) {
-				pairs.push([randomSorted[i],randomSorted[i+1]]);
-			}
+            //izmetam ārā visus pārus, kuri ir spēlējuši min_spēles + 1 spēli
+            allPairs = allPairs.filter((pair) => {
+                var key = pair[0].id + pair[1].id;
+                if ( games_per_pair.has(key) && games_per_pair.get(key) > min_games ) {
+                    return false;
+                }
+                return true;
+            });
+
+            //ja visi ir izmesti, nu tad po, ņemam visus
+            if ( allPairs.length === 0 ) {
+                allPairs = createPairs(roundPairs);
+            }
+
+            var pairs = [];
+
+            // tagad metīsim ārā no roundPairs spēlētājus, kuri ir izlozēti
+            while ( roundPairs.length ) {
+                //ņemam randomā pāri
+                var pair = allPairs[Math.floor(Math.random() * allPairs.length)  ];
+                //randomā izdomājam secību šajā pārī
+                pairs.push( pair.sort((a,b) => { Math.random() - Math.random() }) );
+                //izmetam šo pāri ārā no saraksta
+                roundPairs = roundPairs.filter((player) => {
+                    return player.id != pair[0].id && player.id != pair[1].id;
+                });
+                //atzīmējam cik reizes šis pāris ir spēlējis kopā
+                var key = pair[0].id + pair[1].id;
+                if ( games_per_pair.has(key) ) {
+                    games_per_pair.set(key, games_per_pair.get(key) + 1);
+                } else {
+                    games_per_pair.set(key, 1);
+                }
+                //izmetam abus dalībniekus no pāru saraksta
+                allPairs = allPairs.filter((apPair) => {
+                    return apPair[0].id != pair[0].id && apPair[0].id != pair[1].id && apPair[1].id != pair[0].id && apPair[1].id != pair[1].id;
+                });
+                //ja mums vairs nav pāru, bet ir vēl dalībnieki, nu tad neko darīt, taisam jaunus pārus no atlikušajiem
+                if ( roundPairs.length && allPairs.length === 0 ) {
+                    allPairs = createPairs(roundPairs);
+                }
+            }
 
 			return {
-				'skips': roundSkips,
+				'skips': Array.from(roundSkips.keys()),
 				'pairs': pairs
 			};
 		};
+
+        function createPairs(players) {
+            var sorted = players.sort((a,b) => { a.id < b.id ? -1 : 1; });
+            var ret = [];
+            for ( var i = 0; i < sorted.length; i++ ) {
+                for ( var j = i + 1; j < sorted.length; j++) {
+                    ret.push([players[i], players[j]]);
+                }
+            }
+            return ret;
+        }
 
 		$(document).on("click",".pair",function(){
 			$(this).addClass("alert").addClass("alert-success");
